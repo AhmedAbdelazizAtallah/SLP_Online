@@ -1,0 +1,36 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: |
+          pip install fastapi uvicorn numpy pydantic websockets
+          npm install --prefix tests
+      - name: Build bundle
+        shell: pwsh
+        run: ./build.ps1
+      - name: Syntax checks
+        run: |
+          node --check app.compiled.js
+          python -m py_compile Server.py
+      - name: UI smoke test (jsdom)
+        run: node tests/ui.smoke.test.js
+      - name: Responsive & a11y test (jsdom)
+        run: node tests/verify.responsive.test.js
+      - name: WS integration test
+        env:
+          PORT: '8131'
+          MAX_ROOM_SIZE: '3'
+        run: |
+          python Server.py &
+          sleep 6
+          python tests/ws.test.py

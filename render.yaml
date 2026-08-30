@@ -1,0 +1,33 @@
+# Render Blueprint — deploys the Sign Language Platform free tier
+# Push this folder to GitHub, then on render.com: New + → Blueprint → pick the repo.
+services:
+  - type: web
+    name: sign-language-platform-next
+    runtime: python
+    plan: free
+    region: frankfurt          # closest free region to Egypt/Middle East
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn Server:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: OMP_NUM_THREADS
+        value: "1"
+      - key: TF_NUM_INTRAOP_THREADS
+        value: "1"
+      - key: TF_NUM_INTEROP_THREADS
+        value: "1"
+      # TURN relay for WebRTC behind strict NATs — set these in the Render
+      # dashboard (free account at metered.ca). sync:false = prompted, never
+      # stored in this repo.
+      - key: TURN_URL
+        sync: false
+      - key: TURN_USERNAME
+        sync: false
+      - key: TURN_CREDENTIAL
+        sync: false
+      - key: MAX_ROOM_SIZE
+        sync: false
+      - key: ERR_RATE_LIMIT
+        sync: false

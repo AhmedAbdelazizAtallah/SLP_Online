@@ -1,0 +1,6 @@
+{
+  "name": "slp-next-tests",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": { "jsdom": "24.1.3" }
+}

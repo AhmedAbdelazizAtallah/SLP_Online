@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+.env
+server.log
+tests/node_modules/
+client_errors.log

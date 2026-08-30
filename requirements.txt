@@ -1,0 +1,11 @@
+fastapi==0.110.0
+uvicorn[standard]==0.29.0
+pydantic==2.6.1
+numpy==1.26.4
+
+# These TFLite models use Select-TF/Flex ops (BiLSTM) — the tiny
+# tflite-runtime CANNOT load them. tensorflow-cpu provides the full
+# TFLite interpreter + Flex delegate while staying lean enough for
+# free-tier containers.
+tensorflow-cpu==2.16.1 ; sys_platform == "linux"
+tensorflow==2.16.1 ; sys_platform == "win32"
